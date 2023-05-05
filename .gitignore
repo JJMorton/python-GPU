@@ -4,3 +4,4 @@ __pycache__/
 pyrightconfig.json
 poetry.lock
 /output/
+.DS_Store
