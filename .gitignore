@@ -3,3 +3,4 @@ __pycache__/
 *.sublime-project
 pyrightconfig.json
 poetry.lock
+/output/

@@ -13,17 +13,15 @@ parser.add_argument("width", type=int)
 parser.add_argument("height", type=int)
 parser.add_argument("scale", type=float)
 parser.add_argument("max_iters", type=int)
+parser.add_argument("cmap", nargs="+", type=str)
 args = parser.parse_args()
 
 if not os.path.exists(OUTPUT_DIR):
 	os.makedirs(OUTPUT_DIR)
 
-starttime = timeit.default_timer()
 data = mandy.sample.area(
 	args.real, args.imag, args.width, args.height, args.scale, args.max_iters
 )
-duration = timeit.default_timer() - starttime
-print(f"Calculated in {duration:e}s")
 
 def display(data):
 	shape = data.shape
@@ -34,4 +32,12 @@ def display(data):
 		buffer += "\n"
 	print(buffer)
 
-display(data)
+# Convert to an image
+cmap = mandy.colour.build_colour_map(args.cmap, 256)
+
+starttime = timeit.default_timer()
+img = mandy.colour.image(data, args.max_iters, cmap)
+duration = timeit.default_timer() - starttime
+print(f"Calculated in {duration:e}s")
+
+mandy.colour.encode(img).save(os.path.join(OUTPUT_DIR, "mandybrot.png"))
